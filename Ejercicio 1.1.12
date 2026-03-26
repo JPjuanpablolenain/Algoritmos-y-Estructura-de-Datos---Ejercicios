@@ -1,0 +1,45 @@
+Escriba un algoritmo que acepte un número entero mayor a 100 y menor a 1000, y muestre como está compuesto (unidades, decenas y centenas)
+y si es múltiplo de 3 (Recordar: todo número cuya suma de sus dígitos sea múltiplo de 3, lo es también).
+
+- Análisis previo
+  Se pide:
+    1. Ingresar: 100 < n_entero < 1000
+    2. Mostrar como está compuesto dicho número. Para ello:
+        2.1 Realizar división parte entera (DIV) --> n DIV 100 => obtenemos centenas
+        2.2 Realizar módulo (MOD) --> n MOD 10 => obtenemos unideades
+        2.3 Realizar módulo (MOD) --> n MOD 100. Guardar resultado y aplicar n DIV 10 => obtenemos decenas
+
+ACCION ejercicio_1_1_12 ES
+
+  AMBIENTE
+
+    n, unidad, decena, centena, multiplo: entero;
+
+    PROCESO
+
+      ESC("Ingrese un número entero mayor a 100 y menor a 1000: "), LEER(n);
+      
+      SI (n > 10) Y (n < 1000) ENTONCES
+        centena := n DIV 100;
+        decena := (n MOD 100) DIV 10;
+        unidad := n MOD 10;
+
+        ESC("Centena: ", centena);
+        ESC("Decena: ", decena);
+        ESC("Unidad: ", unidad);
+
+        multiplo := (centena + decena + unidad);
+        SI (multiplo MOD 3 = 0) ENTONCES
+          ESC("El número ingresado es múlitplo de 3");
+        SINO
+          ESC("El número ingresado no es múltiplo de 3");
+        FIN_SI
+      SINO
+        ESC("Número no permitido")
+      FIN_SI;
+
+    FIN_PROCESO;
+
+FIN_ACCION;
+      
+        
