@@ -19,7 +19,7 @@ ACCION ejercicio_1_1_12 ES
 
       ESC("Ingrese un número entero mayor a 100 y menor a 1000: "), LEER(n);
       
-      SI (n > 10) Y (n < 1000) ENTONCES
+      SI (n > 100) Y (n < 1000) ENTONCES
         centena := n DIV 100;
         decena := (n MOD 100) DIV 10;
         unidad := n MOD 10;
