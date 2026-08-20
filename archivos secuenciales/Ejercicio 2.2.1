@@ -1,1 +1,71 @@
-Hola
+Se dispone de una secuencia con los datos de los alumnos de la facultad:
+
+Apellido y Nombre
+Carrera (ISI - IEM - IQ)
+Nº de Legajo
+Fecha de Nacimiento
+Fecha de Ingreso
+D.N.I.
+Sexo (M o F)
+Fecha de último examen aprobado
+Nota
+Se desea un listado de los mismos, con el siguiente formato:
+
+Nro_Legajo  -  Apellido_Nombre  -  Documento  -  Carrera
+
+ACCION EJERICIO2.2.1 ES
+
+  AMBIENTE
+
+    fecha = registro
+      dd: 1..31;
+      mm: 1..12;
+      aa: N(4)
+    FR;
+
+alumnos = registro
+  legajo: N(8);
+  dni: N(8);
+  AyN: AN(30);
+  carrera: ("ISI","IEM","IQ");
+  fecha_Nacimiento: fecha;
+  fecha_Ingreso: fecha;
+  sexo: ("M","F");
+  fecha_ultimo_exam_aprob: fecha;
+  nota: N(2);
+RF;
+
+alumnos: archivo de alumnos ordenado por legajo;
+reg: alumnos;
+
+PROCESO
+
+  ABRIR E/(alumnos);
+  LEER(alumnos, reg);
+
+  ESCRIBIR(" | Nro.Legajo | Apellido y Nombre | Documento | Carrera |");
+
+  MIENTRAS NFDA(alumnos) HACER
+
+    ESC(reg.legajo);
+    ESC(reg.AyN);
+    ESC(reg.dni);
+    ESC(reg.carrera);
+
+    LEER(alumnos, reg);
+
+  FM;
+
+  CERRAR(alumnos);
+
+FIN_ACCION;
+
+
+
+
+
+
+
+
+
+  
