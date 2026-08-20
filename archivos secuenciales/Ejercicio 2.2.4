@@ -3,3 +3,55 @@ que aprobaron alguna materia este año, con nota mayor a 7 (siete).
 
 
 
+ACCION ejercicio2_2_4 ES
+
+  AMBIENTE
+
+    fecha = registro
+      dd: 1..31;
+      mm: 1..12;
+      aa: N(4);
+    FR;
+
+    alumnos = registro
+      legajo: N(8);
+      dni: N(8);
+      AyN: AN(30);
+      carrera: ("ISI","IEM","IQ");
+      fecha_Nacimiento: fecha;
+      fecha_Ingreso: fecha;
+      sexo: ("M","F");
+      fecha_ultimo_exam_aprob: fecha;
+      nota: N(2);
+    FR; 
+
+    alumnos_entrada, alumnos_salida: archivo de alumnos;
+    reg: alumnos;
+
+    input_carrera: ("ISI","IEM","IQ"); 
+    anio: N(4);
+
+  PROCESO
+
+    anio := 2026;
+
+    ABRIR E/(alumnos_entrada);
+    ABRIR S/(alumnos_salida);
+    LEER(alumnos_entrada, reg);
+
+    ESC("Ingrese la carrera a filtrar (ISI, IEM, IQ): ");
+    LEER(input_carrera); 
+
+    MIENTRAS NFDA(alumnos_entrada) HACER
+      
+      SI ((reg.carrera = input_carrera) Y (reg.fecha_ultimo_exam_aprob.aa = anio) Y (reg.nota > 7)) ENTONCES
+        GRABAR(alumnos_salida, reg); 
+      FS;
+      
+      LEER(alumnos_entrada, reg);
+    FM;
+
+    CERRAR(alumnos_entrada);
+    CERRAR(alumnos_salida);
+
+FIN_ACCION;
