@@ -1,0 +1,74 @@
+ACCION ejercicio2_2_7 es
+
+  AMBIENTE
+
+    padron = registro
+      dni: N(8);
+      clase: N(4);
+      AyN: AN(20);
+      direccion: AN(20);
+      nro_mesa: N(3);
+      nro_circuito: N(3);
+      observaciones: AN(100);
+      partido: ("0","1","2","3");
+    FR;
+
+    salida = registro
+      AyN: AN(20);
+      dni: N(8);
+      direccion: AN(20);
+    FR;
+  
+    padron: archivo de padron;
+    salida_1, salida_2: archivo de salida;
+    reg_padron: padron;
+    reg_salida: salida;
+    
+
+    PROCESO
+    
+      ABRIR E/(padron);
+      ABRIR S(salida_1);
+      ABRIR S((salida_2);
+
+      LEER(padron, reg_padron);
+
+      MIENTRAS NFDA(padron) HACER
+        SI (reg_padron.partido = "3") ENTONCES
+        
+          reg_salida.AyN:= reg_padron.AyN;
+          reg_salida.dni:= reg_padron.dni;
+          reg_salida.direccion:= reg_padron.direccion;
+          
+          GRABAR(salida_1, reg_salida);
+
+        SINO
+          SI ((reg_padron.partido = "0") Y (reg_padron.clase > 1940)) ENTONCES
+          
+            reg_salida.AyN:= reg_padron.AyN;
+            reg_salida.dni:= reg_padron.dni;
+            reg_salida.direccion:= reg_padron.direccion;
+          
+            GRABAR(salida_2, reg_salida);
+          FS;
+
+        FS;
+
+        LEER(padron, reg_padron);
+
+      FM;
+
+      CERRAR(padron);
+      CERRAR(salida_1);
+      CERRAR(salida_2);
+
+FIN_ACCION;
+
+
+
+
+
+
+
+
+      
