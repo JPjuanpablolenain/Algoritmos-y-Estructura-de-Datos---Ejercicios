@@ -1,0 +1,90 @@
+Se dispone de un archivo con datos de los alumnos de la U.T.N. con la siguiente información para cada alumno:
+
+ALUMNOS Ordenado por Sexo, Carrera, Nro_Legajo
+
+Sexo
+Carrera
+Nro_Legajo
+Fecha_Ingreso
+Total_Materias_Aprobadas
+
+
+Se desea un listado con el siguiente detalle por sexo, carrera y total general
+
+1- Total de alumnos que ingresaron en el año 2009 con más de 20 materias aprobadas.
+2- Total de alumnos que ingresaron en el año 2009 con menos de 20 materias aprobadas.
+
+
+
+ACCION ejercicio2_2_11 ES
+  AMBIENTE
+
+    fecha = registro
+      dd: 1..31;
+      mm: 1..12;
+      aa: N(4);
+    FR;
+
+    entidad_alumno = registro
+      sexo: ("M","F");
+      carerra: ("ISI","IEM","IQ");
+      legajo: N(7);
+      fecha_ingreso: fecha;
+      total_ma: N(3);
+    FR;
+
+    alumnos: archivo de entidad_alumno ordenado por sexo, carrera, legajo;
+    reg: entidad_alumno;
+
+
+    SUBACCION corte ES:
+      SI (actual_sexo != reg.sexo) ENTONCES
+        corte_sexo;
+      SINO
+        corte_carrera;
+      FS
+    FIN_SUBACCION;
+
+    SUBACCION corte_sexo ES:
+
+      ESC("La cantidad de alumnos del sexo", actual_sexo, "que ingresaron en el año 2009 y tienen más de 20 materias aprobadas son: ",cont_sexo_mas_veinte);
+      ESC("La cantidad de alumnos del sexo", actual_sexo, "que ingresaron en el año 2009 y tienen menos de 20 materias aprobadas son: ",cont_sexo_menos_veinte);
+      
+      cont_carrera_mas__veinte:= cont_carrera_mas__veinte + cont_sexo_mas_veinte;
+      cont_carrera_menos__veinte:= cont_carrera_menos__veinte + cont_sexo_menos_veinte;
+      
+      cont_sexo_mas_veinte:= 0;
+      cont_sexo_menos_veinte:= 0;
+
+    FIN_SUBACCION;
+
+    PROCESO
+
+      ABRIR E/(alumnos);
+      LEER(alumnos, reg);
+
+      MIENTRAS NFDA(alumnos) HACER
+        actual_sexo:= reg.sexo;
+        actual_carrera:= reg.carrera;
+        MIENTRAS (actual_carrera = reg.carrera) Y NFDA(alumnos) HACER
+          MIENTRAS (actual_sexo = reg.sexo) Y NFDA(alumnos) HACER
+            SI (reg.fecha_ingreso.aa = 2009) Y (cantidad_ma > 20) ENTONCES
+              cont_sexo_mas_veinte:= cont_sexo_mas_veinte + 1;
+            SINO
+              SI (reg.fecha_ingreso.aa = 2009) Y (cantidad_ma < 20) ENTONCES
+                cont_sexo_menos_veinte:= cont_sexo_menos_veinte + 1;
+            FS;
+            LEER(alumnos, reg);
+          FM;
+          corte;
+          
+
+
+
+en teoría aún estamos or ver archivos indexados
+
+
+
+
+
+
