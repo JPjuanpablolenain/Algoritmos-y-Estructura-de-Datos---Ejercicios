@@ -1,0 +1,75 @@
+Ambos archivos están ordenados por Nro. de Cliente en forma ascendente. Listar los nombres, fecha y monto de última compra,
+de todos aquellos clientes cuya última compra sea posterior a una fecha dada y el monto supere un monto dado.
+
+COMPRAS Ordenado por Nro_Cliente: Nro_Cliente Fecha_Ultima_Compra Monto
+CLIENTES Ordenado por Nro_Cliente: Nro_Cliente Apellido_Nombre Domicilio Teléfono DNI
+
+ACCION ejercicio 2_2_8 ES
+
+  AMBIENTE
+
+    fecha = registro:
+      dd: 1..31;
+      mm: 1..12;
+      aa: N(4);
+    FR;
+
+    compra = registro
+      nro_cliente: N(5);
+      fecha_ultima_compra: fecha;
+      monto: N(8);
+    FR;
+
+    cliente = registro
+      nro_cliente: N(5);
+      AyN: AN(30);
+      dni: N(8);
+      domicilia: AN(40);
+      telefono: N(8);
+    FR;
+
+    compras: archivo de compra ordenado por nro_cliente;
+    clientes: archivo de cliente ordenado por nro_cliente;
+    reg_compras: compra;
+    reg_clientes: cliente;
+
+    input_fecha: fecha;
+    input_monto: N(8);
+
+    PROCESO
+
+      ABRIR E/(compras);
+      ABRIR E/(clientes);
+
+      LEER(compras, reg_compras);
+      LEER(clientes, reg_clientes);
+
+      ESC("Ingrese una fecha en el formato dd/mm/aa: ");
+      LEER(input_fecha.dd, input_fecha.mm, input_fecha.aa);
+
+      ESC("Ingrese un monto: ");
+      LEER(input_monto);
+
+        MIENTRAS NDFA (compras) Y NFDA (clientes) HACER
+          MIENTRAS (reg_clientes.nro_cliente < reg_compras.nro_cliente) HACER
+            LEER(clientes, reg_clientes);
+          FM;
+          SI (reg_compras.fecha_ultima_compra > input_fecha) Y (reg_compras.monto > input_monto) ENTONCES
+            ESC(reg_clientes.AyN, reg_compras.fecha_ultima_compra, reg_compras.monto)
+          FS;
+          LEER(compras, reg_compras);
+          LEER(clientes, reg_clientes);
+        FM;
+
+      CERRAR(compras);
+      CERRAR(clientes);
+
+FIN_ACCION;
+
+
+
+
+
+
+
+
