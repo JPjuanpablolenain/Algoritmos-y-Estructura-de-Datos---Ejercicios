@@ -1,0 +1,94 @@
+Del archivo general de alumnos de la U.T.N. - Facultad Regional Resistencia, ordenado por carrera
+se desea emitir la cantidad de alumnos correspondientes a cada carrera y el total general.
+
+Apellido y Nombre
+Carrera (ISI - IEM - IQ)
+Nº de Legajo
+Fecha de Nacimiento
+Fecha de Ingreso
+D.N.I.
+Sexo (M o F)
+Fecha de último examen aprobado
+Nota
+
+ACCION ejercicio2_2_1 ES
+
+  AMBIENTE
+
+  fecha = registro
+    dd: 1..31;
+    mm: 1..12;
+    aa: N(4);
+  FR;
+
+  entidad_alumno = registro
+    legajo: N(7);
+    dni: N(8);
+    carrera("ISI","IEM","IQ");
+    AyN: AN(30);
+    sexo: ("M", "F");
+    fecha_nacimiento: fecha;
+    fecha_ingreso: fecha;
+    fecha_uea: fecha;
+    nota: N(2);
+  FR;
+
+  alumanos: archivo de entidad_alumno ordenado por carrera;
+  reg: entidad_alumno:
+
+  total_isi, total_iem, total_iq, total, cont: N(4);
+  carrera_actual: ("ISI","IEM","IQ");
+
+  SUBACCION corte ES
+    SI (carrera_actual = "ISI") ENTONCES   // acá no puedo preguntar por reg.carrea = ISI porque "reg.carrea" ya es el valor del primer proximo registro de la otra carrera. Necesito el resguardo --> carrera_actual      
+      total_isi:= cont;
+    SINO
+      SI (carrera_actual = "IEM") ENTONCES
+        total_iem := cont;
+      SINO
+        total_iq := cont;
+      FS;
+    FS;
+    total:= total + cont;
+    cont:= 0;
+  FIN_SUBACCION;
+
+  PROCESO
+
+    ABRIR E/(alumnos);
+    LEER(alumnos, reg);
+
+    total_isi, total_iem, total_iq, total, cont:= 0;
+
+    MIENTRAS NFDA(alumnos) HACER
+      carrera_actual := reg.carrera;
+      MIENTRAS (carrera_actual = reg.carrera) Y NFDA (alumnos) HACER
+        cont:= cont + 1;
+        LEER(alumnos, reg);
+      FM;
+      corte;  // estoy parado en el primer registro de la otra cerrera o terminó el archivo
+      SI NFDA(alumnos) ENTONCES         // está de más este check, porque ya tengo un MIENTRAS NFDA arriba.
+        carrera_actual := reg.carrera;
+      FS;
+    FM;
+
+    ESC("Total de alumnos en ISI: ", total_isi);
+    ESC("Total de alumnos en IEM: ", total_iem);
+    ESC("Total de alumnos en IQ: ", total_iq);
+    ESC("La cantidad total de alumnos son: ", total);
+
+    CERRAR(alumnos);
+
+FIN_ACCION;
+
+
+Altas, modificacion, 
+    
+
+
+
+
+
+
+
+
