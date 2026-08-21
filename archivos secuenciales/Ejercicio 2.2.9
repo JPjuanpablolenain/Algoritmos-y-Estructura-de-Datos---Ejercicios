@@ -1,0 +1,88 @@
+**Ordenado por** --> archivo secuencia. Se puede abrir solo de E o de S. Sos indexados sí se pueden modificar si se abren de E/S
+**baja física
+**alta: cargar campo por campo cada registro
+** archivo amigo vs maestro
+
+Una casa deportiva dispone de un archivo de productos, ordenado por código de producto, que contiene los siguientes datos:
+
+Cod_Producto
+Tipo(1,2,3)
+Marca
+Modelo
+Descripción
+Cantidad_Existente
+Precio_Unitario
+
+Se ha registrado un aumento por tipo de producto de la siguiente forma:
+tipo 1 - Calzados: 10%
+tipo 2 – Indumentaria: 25%
+tipo 3 - Accesorios (pelotas, raquetas, etc.): 50%.
+
+Se debe modificar  los precios de acuerdo a los porcentajes antes mencionados y generar un archivo nuevo con dichos precios actualizados.
+Al terminar el proceso informar:
+- Cantidad total de artículos de cada tipo
+- Cantidad total general
+
+
+ACCION ejercicio2_2_9 ES
+
+  AMBIENTE
+
+    entidad_producto = registro
+      cod_producto: N(8);
+      tipo: ("1","2","3");
+      marca: AN(15);
+      modelo: AN(20);
+      descripcion: AN(100);
+      cantidad_existente: N(4);
+      precio_unitario: N(7);
+    FR;
+
+    productos, salida: archivo de entidad_producto ordenado por cod_producto;
+    reg: entidad_producto;
+
+    total_calzado, total_indumentaria, total_accesorio, total: N(4);
+
+    PROCESO
+
+      ABRIR E/(productos);
+      ABRIR E/(salida);
+      LEER(productos, reg);
+
+      total_calzado, total_indumentaria, total_accesorio, total:= 0;
+
+      MIENTRAS NFDA(productos) HACER
+        SI (reg.tipo = "1") ENTONCES
+          total_calzado:= total_calzado + 1;
+          reg.precio_unitario:= (reg.precio_unitario*10)/100) + reg.precio_unitario;
+        SINO
+          SI (reg.tipo = "2") ENTONCES
+            total_indumentaria:= total_indumentaria + 1;
+            reg.precio_unitario:= (reg.precio_unitario*25)/100) + reg.precio_unitario;
+          SINO
+            total_accesorio:= total_accesorio + 1;
+            reg.precio_unitario:= (reg.precio_unitario*50)/100) + reg.precio_unitario;
+          FS;
+        FS;
+        GRABAR(salida, reg);
+        LEER(productos, reg);
+      FM;
+      
+      total:= total_calzado + total_indumentaria + total_accesorio;
+      ESC("La cantidad de calzados es: ", total_calzado);
+      ESC("La cantidad de indumentaria es es: ", total_indumentaria);
+      ESC("La cantidad de accesorios es: ", total_accesorio);
+      ESC("El total general de productos es: ", total);
+      
+      CERRAR(productos);
+      CERRAR(salida);
+
+FIN_ACCION;        
+
+
+
+
+
+
+
+      
