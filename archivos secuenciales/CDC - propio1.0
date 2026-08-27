@@ -1,0 +1,80 @@
+Archivo de ventas ordenado por Año, Mes y Vendedor. Emitir totales parciales de ventas
+
+
+AMBIENTE
+
+  fecha = registro
+    dd: 1..31;
+    mm: 1..12;
+    aa: N(4);
+  fr;
+
+  venta = registro
+    id_venta: N(5);
+    id_vendedor: N(5;)
+    fecha;
+    total: N(8);
+  fr;
+
+ventas: archivo de venta ordenado por fecha y id_vendedor;
+reg: venta;
+total_aa, total_mm, total_vendedor: N(12);
+actual_aa: fecha.aa;
+actual_mm: fecha.mm;
+actual_vendedor: N(5)
+
+
+SUBACCION corte_vendedor ES
+  ESC("En el año: ", actual_aa, " y el mes: ", actual_mm, " el empleado: ", actual_vendedor, " vendió un total de: ", total_vendedor);
+  actual_vendedor = reg.id_vendedor; // actualizó variable control actual
+  total_mes:= total_mes + total_vendedor; // acumulo total a nivel superior (mes)
+  total_vendedor:= 0; // reinicio a cero acumulador de nivel actual (vendedor)
+FS;
+
+SUBACCION corte_mm ES
+  corte_vendedor;
+  ESC("En el año: ", actual_aa, " y el mes: ", actual_mes, " el total de ventas fue de: $", total_mes);
+  actual_mes:= reg.fecha.mm;
+  total_aa:= total_aa + total_mm;
+  total_mm:= 0;
+FS;
+
+SUBACCION corte_aa ES;
+
+PROCESO
+
+  total_aa, total_mm, total_vendedor:= 0;
+  ABRIR E/(ventas);
+  LEER(ventas, reg);
+  actual_aa: reg.fecha.aa;
+  actual_mm: reg.fecha.mm;
+  actual_vendedor: reg.id_vendedor;
+
+  MIENTRAS NFDA(ventas) HACER
+    MIENTRAS (actual_aa = reg.fecha.aa) HACER
+        MIENTRAS (actual_vendedor = reg.id_vendedor) Y (actual_mm = reg.fecha.mm) HACER
+          total_vendedor := total_vendedor + reg.total;
+        FM;
+        SI (actual_vendedor <> reg.id_vendedor) ENTONCES
+          corte_vendedor;
+        SINO
+          corte_mes;
+        FS;
+      FM;
+      corte_mm;in
+    FM;
+    corte_aa;
+  
+
+
+
+
+
+
+
+
+
+
+
+
+    
