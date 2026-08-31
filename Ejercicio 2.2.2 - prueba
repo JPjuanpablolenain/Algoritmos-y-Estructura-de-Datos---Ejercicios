@@ -1,0 +1,52 @@
+Se dispone de una archivo de facturas con los siguientes datos:
+
+- Nº de Factura
+- Fecha
+- Total
+
+Se desea un listado de las facturas cuyas fechas sean posteriores a una fecha dada,
+y cuyos importes totales no alcancen los $1000, con el siguiente formato: Nro_Factura Fecha Importe_Total
+
+ACCION ejercicio2_2_2 ES
+AMBIENTE
+
+  fecha = registro
+    dd: 1..31;
+    mm: 1..12;
+    aa: N(4);
+  fin_registro;
+
+  factura = registro
+    n_factura: N(8);
+    fecha_factura: fecha;
+    total: N(7);
+  fin_registro;
+
+  archivo_factura: archivo de factura;
+  reg: factura;
+
+  input_fecha = fecha;
+
+  PROCESO
+
+    ABRIR E/(archivo_factura);
+    LEER(archivo_factura, reg);
+
+    ESCRIBIR("Ingrese una fecha con el formato dd/mm/aa: ");
+    LEER(input_fecha);
+
+    MIENTRAS NFDA(archivo_factura) HACER
+      SI (reg.total < 1000) ENTONCES
+        ESCRIBIR(reg);
+      FIN_SI;
+      LEER(archivo_factura, reg);
+    FIN_MIENTRAS;
+
+FIN_ACCION;
+
+
+
+    
+  
+
+  
