@@ -1,0 +1,109 @@
+ACCION es
+AMBIENTE
+
+  fecha = registro
+    dd: 1..31;
+    mm: 1..12;
+    aa: N(4);
+  fr;
+
+  alumno = registro
+    sexo: ("F","M");
+    carrera:("ISI","IEM","IQ");
+    legajo: N(5);
+    fecha_ingreso: fecha;
+    total_materias_aprobadas: N(2);
+  fr;
+
+  alumnos: archivo de alumno ordenado por sexo, carrera y legajo;
+  reg: alumno;
+
+  // contadores por carrera
+  carrera_mas_veinte, carrera_menos_veinte: N(4);
+
+  // contadores por sexo
+  sexo_mas_veinte, sexo_menos_veinte: N(4);
+
+  // contadores totales
+  total_mas_veinte, total_menos_veinte: N(5);
+
+  actual_sexo: ("F","M");
+  actual_carrera: ("ISI","IEM","IQ");
+
+  SUBACCION ver_corte ES
+    SI(actual_sexo <> reg.sexo) ENTONCES
+      corte_sexo;
+    SINO
+      SI (actual_carrera <> reg.carrera) ENTONCES
+        corte_carrera;
+      FS;
+    FS;
+  FIN_SUBACCION;
+
+  SUBACCION corte_carrera ES
+    ESC("La cantidad de alumnos de sexo: ", actual_sexo, "de la carrera de: ", actual_carrera, "que ingresaron en el año 2009 y tienen más de 20 materias aprobadas son: ", carrera_mas_veinte);
+    ESC("La cantidad de alumnos de sexo: ", actual_sexo, "de la carrera de: ", actual_carrera, "que ingresaron en el año 2009 y tienen menos de 20 materias aprobadas son: ", carrera_menos_veinte);
+    sexo_mas_veninte:= sexo_mas_veinte + carrera_mas_veinte;
+    sexo_menos_veinte:= sexo_menos_veinte + carrera_menos_veinte;
+    carrera_mas_veinte, carrera_menos_veinte:= 0;
+    actual_carrera:= reg.carrera;
+  FIN_SUBACCION;
+
+  SUBACCION corte_sexo ES
+    corte_carrera;
+    ESC("La cantidad de alumnos de sexo: ", actual_sexo,"que ingresaron en el año 2009 y tienen más de 20 materias aprobadas son: ", sexo_mas_veninte);
+    ESC("La cantidad de alumnos de sexo: ", actual_sexo,"que ingresaron en el año 2009 y tienen menos de 20 materias aprobadas son: ", sexo_menos_veinte);
+    total_mas_veinte:= total_mas_veinte + sexo_mas_veninte;
+    total_menos_veinte:= total_menos_veinte + sexo_menos_veninte;
+    sexo_mas_veinte, sexo_menos_veinte:= 0;
+    actual_sexo:= reg.sexo;
+  FIN_SUBACCION;
+
+  SUBACCION informar_total_general ES
+    corte_sexo;
+    ESC("La cantidad de alumnos que ingresaron en el año 2009 con más de 20 materias aprobadas son: ", total_mas_veinte);
+    ESC("La cantidad de alumnos que ingresaron en el año 2009 con menos de 20 materias aprobadas son: ", total_menos_veinte);
+  FIN_SUBACCION;
+
+  SUBACCION tratar_registro ES
+    SI (reg.total_materias_aprobadas > 20) Y (reg.fecha_ingreso.aa = 2009) ENTONCES
+      carrera_mas_veinte:= carrera_mas_veinte + 1;
+    SINO
+      SI (reg.total_materias_aprobadas < 20) Y (reg.fecha_ingreso.aa = 2009) ENTONCES
+        carrera_menos_veinte:= carrera_menos_veinte + 1;
+      FIN_SI;
+    FIN_SI;
+  FIN_SUBACCION;
+
+PROCESO
+
+  ABRIR E/(alumnos);
+  LEER(alumnos, reg);
+
+  actual_sexo:= reg.sexo;
+  actual_carrera:= reg.carrera;
+
+  carrera_mas_veinte, carrera_menos_veinte:= 0;
+  sexo_mas_veinte, sexo_menos_veinte:= 0;
+  total_mas_veinte, total_menos_veinte:= 0;
+  
+
+  MIENTRAS NFDA(alumnos) HACER
+    ver_corte;
+    tratar_registro;
+    LEER(alumnos, reg);
+  FIN_MIENTRAS;
+
+  informar_total_general;
+
+  CERRAR(alumnos);
+
+FIN_ACCION;
+    
+
+
+
+
+
+
+
