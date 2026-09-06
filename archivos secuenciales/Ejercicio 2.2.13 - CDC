@@ -68,6 +68,8 @@ ACCION ejercicio 2.2.13 ES
       ESC("En la sucursal: ", actual_sucursal, "la tragamonedas con código: ", actual_tragamonedas, "perteneciente a la marca: ", actual_marca, "y modelo: ", actual_modelo, "tuvo un total de: ", total_rep_tragamonedas, "reparaciones, siento el costo total: $", total_costo_tragamonedas);                                                       
       total_rep_modelo:= total_rep_modelo + total_rep_tragamonedas;
       total_costo_modelo := total_costo_modelo + total_costo_tragamonedas;
+      total_rep_tragamonedas:= 0;
+      total_costo_tragamonedas:= 0;
       actual_tragamonedas:= reg.cod_tragamonedas;
     FIN_SUBACCION;
 
@@ -76,6 +78,8 @@ ACCION ejercicio 2.2.13 ES
       ESC("En la sucursal: ", actual_sucursal, "la tragamonedas perteneciente a la marca: ", actual_marca, "y modelo: ", actual_modelo, "tuvo un total de: ", total_rep_modelo, "reparaciones, siento el costo total: $", total_costo_modelo);   
       total_rep_marca := total_rep_marca + total_rep_modelo;
       total_costo_marca := total_costo_marca + total_costo_modelo;
+      total_rep_modelo:= 0;
+      total_costo_modelo:= 0;
       actual_modelo:= reg.modelo;
     FIN_SUBACCION;
 
@@ -84,6 +88,8 @@ ACCION ejercicio 2.2.13 ES
       ESC("En la sucursal: ", actual_sucursal, "la tragamonedas perteneciente a la marca: ", actual_marca, " tuvo un total de: ", total_rep_marca, "reparaciones, siento el costo total: $", total_costo_marca);   
       total_rep_sucursal := total_rep_sucursal + total_rep_marca;
       total_costo_sucursal := total_costo_sucursal + total_costo_marca;
+      total_rep_marca:= 0;
+      total_costo_marca:= 0;
       actual_marca := reg.marca;
     FIN_SUBACCION;
 
@@ -92,6 +98,8 @@ ACCION ejercicio 2.2.13 ES
       ESC("En la sucursal: ", actual_sucursal," el costo total de reparacion de tragamonedas es de: $", total_costo_sucursal);
       total_rep_general:= total_rep_general + total_rep_sucursal;
       total_costo_general:= total_costo_general + total_costo_sucursal;
+      total_rep_sucursal:= 0;
+      total_costo_sucursal:= 0;
       actual_sucursal:= reg.cod_sucursal;
     FIN_SUBACCION;
 
@@ -113,6 +121,11 @@ ACCION ejercicio 2.2.13 ES
       
       ABRIR E/(reparaciones);
       LEER(reparaciones, reg);
+
+      actual_tragamonedas:= reg.cod_tragamonedas;
+      actual_modelo:= reg.modelo;
+      actual_marca:= reg.marca;
+      actual_sucursal:= reg.cod_sucursal;
 
       MIENTRAS NFDA(reparaciones) HACER
         ver_corte;
