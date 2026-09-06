@@ -1,0 +1,164 @@
+El organismo del cual dependen las escuelas de un distrito lleva un archivo con los registros para todos los alumnos de nivel secundario de ese distrito:
+
+ALUMNOS Ordenado por Escuela, Año, División
+
+Escuela
+Año
+División
+Nombre
+Cant_Inasistencias
+
+
+Se introduce como dato el número de distrito y la cantidad de días de clase dictados en el año.
+El archivo está ordenado por número de escuela, año y división. Los alumnos que superan el 20% de las inasistencias
+están en situación de LIBRES, de lo contrario son REGULARES.
+
+Se desea conocer:
+
+Para cada división:
+  - Cantidad de alumnos
+Para cada año:
+  - Cantidad de alumnos libres
+  - Cantidad de alumnos regulares
+  - Cantidad total de alumnos
+Todas las escuelas:
+  - Cantidad total de alumnos
+  - Porcentaje de alumnos libres. - Promedio de inasistencias por alumnos.
+
+ACCION ejercicio 2.2.15 ES
+
+  AMBIENTE
+
+    alumno = REGISTRO
+      escuela AN(40);
+      anio: ("1","2","3","4","5");
+      division: ("A","B","C");
+      nombre: AN(20);
+      cant_inasistencias: N(2);
+    FIN_REGISTRO;
+
+    alumnos: archivo de alumno ordenado por escuela, anio y division;
+    reg: alumno;
+
+    clases_dictadas: N(2);
+    distrito_num: N(3);
+
+    total_division, total_anio: (3);
+    total_alumnos: N(4);
+    regular_divisio, regular_anio, libre_division, libre_anio: N(3);
+
+    actual_escuela: AN(40);
+    actual_anio: ("1","2","3","4","5");
+    actual_division: ("A","B","C");
+
+    inasistencias_anio, inasistencias_division: N(2);
+    total_inasistencias: N(4);
+
+
+    SUBACCION ver_corte ES
+      SI (actual_escuela <> reg.escuela) ENTONCES
+        corte_escuela;
+      SINO
+        SI (actual_anio <> reg.anio) ENTONCES
+          corte_anio;
+        SINO
+          SI (actual_division <> reg.division) ENTONCES
+            corte_division;
+          FIN_SI;
+        FIN_SI;
+      FIN_SI;
+    FIN_SUBACCION;
+
+    SUBACCION corte_division ES
+      ESC("La cantidad de alumnos en la escuela: ", actual_escuela, "en el año: ", actual_anio, "y en la división: ", actual_division, "es: ", total_divsion);
+      total_anio:= total_anio + total_divsion;
+      inasistencias_anio:= inasistencias_anio + inasistencias_division;
+      regular_anio:= regular_anio + regular_division;
+      libre_anio:= libre_anio + libre_division;
+      inasistencias_anio:= inasistencias_division;
+      actual_division:= reg.division;
+      inasistencias_division:= 0;
+      total_division:= 0;
+      regular_division:= 0;
+      libre_division:= 0;
+      inasistencias_division:= 0;
+    FIN_SUBACCION;
+
+    SUBACCION corte_anio ES
+      corte_division;
+      ESC("La cantidad de alumnos en la escuela: ", actual_escuela, "en el año: ", actual_anio, " es: ", total_anio);
+      ESC("La cantidad de alumnos regulares en la escuela: ", actual_escuela, "en el año: ", actual_anio, " es: ", regular_anio);
+      ESC("La cantidad de alumnos libres en la escuela: ", actual_escuela, "en el año: ", actual_anio, " es: ", libre_anio);
+      total_alumnos := total_alumnos + total_anio;
+      total_libres := total_libres + libre_anio;
+      total_inasistencias := total_inasistencias + inasistencias_anio;
+      actual_anio := reg.anio;
+      total_anio, regular_anio, libre_anio:= 0;
+    FIN_SUBACCION;
+
+    SUBACCION corte_escuela ES
+      corte_anio;
+    FIN_SUBACCION;
+
+    SUBACCION corte_final ES
+      corte_anio;
+      ESC("La cantidad total de alumnos de todas las escuelas del distrito número: ", distrito_num, "es de: ", total_alumnos);
+      ESC("El porcentaje de alumnos libres de todas las escuelas del distrito número: ", distrito_num, "es de: ", total_libres*100)/total_alumnos);
+      ESC("El promedio de inasistencias por alumno de todas las escuelas del distrito número: ", distrito_num, "es de: ", total_inasistencias/total_alumnos);
+    FIN_SUBACCION;
+
+    SUBACCION tratar_registro ES
+      total_division := total_division + 1;
+      SI ((reg.cant_inasistencias*100)/clases_dictadas > 20) ENTONCES
+        libre_division := libre_division + 1;
+      SINO
+        regular_division := regular_division + 1;
+      FIN_SI;
+      inasistencias_division:= inasistencias_division + reg.cant_inasistencias;
+    FIN_SUBACCION;
+
+    PROCESO
+
+      ABRIR E/(alumnos);
+      LEER(alumnos, reg);
+
+      ESC("Ingrese la cantidad de clases dictadas en el año: ");
+      LEER(clases_dictadas);
+
+      ESC("Ingrese el número del distrito: ");
+      LEER(distrito_num);
+
+      total_division, total_anio, total_alumnos, regular_divisio, regular_anio, libre_division, libre_anio, inasistencias_anio, inasistencias_division, total_inasistencias:= 0;
+
+      actual_escuela:= reg.escuela;
+      actual_anio: reg.anio;
+      actual_division: reg.division;
+
+      MIENTRAS NFDA(alumnos) HACER
+        ver_corte;
+        tratar_registro;
+        LEER(alumnos, reg);
+      FIN_MIENTRAS;
+      
+      corte_final;
+
+      CERRAR(alumnos);
+
+FIN_ACCION;
+      
+
+    
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
