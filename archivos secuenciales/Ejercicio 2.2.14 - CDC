@@ -1,0 +1,95 @@
+Dados el siguiente fichero con datos de un censo de la ciudad de Resistencia:
+
+CENSO Ordenado por Radio, Manzana, Nro_Vivienda
+
+Radio
+Manzana
+Nro_Vivienda
+Condicion_Vivienda
+Cantidad_Habitantes
+
+Condición puede ser : Muy Buena, Buena o Mala.
+Obtener los siguientes totales de personas que habitan en viviendas cuya condición es muy buena: total en la ciudad y totales por Radio y Manzana.
+
+
+ACCION ejercicio 2.2.14 ES
+
+  AMBIENTE
+
+    censo = REGISTRO
+      radio: N(5);
+      manzana: N(3);
+      nro_vivienda: N(5);
+      condicion_vivienda: ("Muy buena","Buena","Mala");
+      cantidad_habitantes: N(2);
+    FIN_REGISTRO
+
+    archivo_censo: archivo de censo ordenado por radio, manzana, nro_vivienda;
+    reg: censo;
+
+    total_manzana, total_radio, total_ciudad: N(5);
+    actual_manzana: N(3);
+    actual_radio: N(5);
+
+    SUBACCION ver_corte ES
+      SI (actual_radio <> reg.radio) ENTONCES
+        corte_radio;
+      SINO
+        SI (actual_manzana <> reg.manzana) ENTONCES
+          corte_manzana;
+        FIN_SI;
+      FIN_SI;
+
+    SUBACCION corte_manzana ES
+      ESC("En la ciudad de Resistencia, en el radio: ", actual_radio, "y manzana: ", actual_manzana, "la cantidad de personas que habitan en viviendas cuya condición es muy buena es de: ",total_manzana);
+      total_radio:= total_radio + total_manzana;
+      actual_manzana:= reg.manzana;
+      total_manzana:= 0;
+    FIN_SUBACCION;
+
+    SUBACCION corte_radio ES
+      corte_manzana;
+      ESC("En la ciudad de Resistencia, la cantidad de habitantes en el radio: ", actual_radio, "que habitan en viviendas cuya condición es muy buena es de: ", total_radio);
+      total_ciudad:= total_ciudad + total_radio;
+      actual_radio:= reg.radio;
+      total_radio:= 0;
+    FIN_SUBACCION;
+
+    SUBACCION corte_ciudad ES
+      corte_radio;
+      ESC("El total de personas que habitan en viviendas cuya condición es muy buena en la ciudad de Resistencia es de: ",total_ciudad");
+    FIN_SUBACCION;
+
+    SUBACCION tratar_registro ES
+      SI (reg.condicion_vivienda = "Muy buena") ENTONCES
+        total_manzana:= total_manzana + 1;
+      FIN_SI;
+    FIN_SUBACCION;
+
+
+    PROCESO
+
+      ABRIR E/(archivo_censo);
+      LEER(archivo_censo, reg);
+      total_manzana, total_radio, total_ciudad:= 0;
+      actual_manzana:= reg.manzana;
+      actual_radio:= reg.radio;
+
+      MIENTRAS NFDA(archivo_censo) HACER
+        ver_corte;
+        tratar_registro;
+        LEER(archivo_censo, reg);
+      FIN_MIENTRAS;
+      corte_ciudad;
+
+      CERRAR(archivo_censo);
+
+  FIN_ACCION;
+      
+
+
+
+
+
+
+
