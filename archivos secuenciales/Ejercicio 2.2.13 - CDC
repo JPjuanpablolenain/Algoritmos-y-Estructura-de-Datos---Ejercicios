@@ -1,0 +1,130 @@
+Un Casino de la región ha notado un incremento en los costos de las reparaciones de tragamonedas en sus sucursales.
+Por ello solicitó un informe con la cantidad de reparaciones y sus costos, discriminados según tragamonedas, modelo, marca, sucursal y total general.
+
+Se dispone de un archivo REPARACIONES, con el siguiente formato. Cada registro representa la reparación de un tragamonedas,
+tener en cuenta que puede existir más de una reparación por tragamonedas.
+
+REPARACIONES Ordenado por Cod_Sucursal, Marca, Modelo, Cod_Tragamonedas
+
+Cod_Sucursal
+Marca
+Modelo
+Cod_Tragamonedas
+Fecha_Reparacion
+Costo_Reparacion
+
+
+Realice el algoritmo para emitir el informe con los totales solicitados
+
+ACCION ejercicio 2.2.13 ES
+
+  AMBIENTE
+
+    fecha = registro
+      dd: 1..31;
+      mm: 1..12;
+      aa: N(4);
+    fin_registro;
+
+    reparacion = registro
+      cod_sucursal: N(5);
+      marca: AN(20);
+      modelo: AN(20);
+      cod_tragamonedas: N(7);
+      fecha_reparacion: fecha;
+      costo_reparacion: N(7);
+    fin_registro;
+
+    reparaciones: archivo de reparacion ordenado por cod_Sucursal, marca, modelo, cod_Tragamonedas;
+    reg: reparacion;
+
+    total_rep_tragamonedas, total_rep_modelo, total_rep_marca, total_rep_sucursal, total_rep_general: N(4);
+    total_costo_tragamonedas, total_costo_modelo; total_costo_marca, total_costo_sucursal, total_costo_general: N(8);
+    actual_tragamonedas: N(7);
+    actual_modelo, actual_marca: AN(20);
+    actual_sucursal: N(5);
+
+    SUBACCION ver_corte ES
+
+      SI (actual_cod_sucursal <> reg.cod_sucursal) ENTONCES
+        corte_sucursal;
+      SINO
+        SI (actual_marca <> reg.marca) ENTONCES
+          corte_marca;
+        SINO
+          SI (actual_modelo <> reg.modelo) ENTONCES
+            corte_modelo;
+          SINO
+            SI (actual_tragamonedas <> reg.cod_tragamonedas) ENTONCES
+              corte_tragamonedas
+            FIN_SI;
+          FIN_SI;
+        FIN_SI;
+      FIN_SI;
+
+    FIN_SUBACCION;
+
+    SUBACCION corte_tragamonedas ES
+      ESC("En la sucursal: ", actual_sucursal, "la tragamonedas con código: ", actual_tragamonedas, "perteneciente a la marca: ", actual_marca, "y modelo: ", actual_modelo, "tuvo un total de: ", total_rep_tragamonedas, "reparaciones, siento el costo total: $", total_costo_tragamonedas);                                                       
+      total_rep_modelo:= total_rep_modelo + total_rep_tragamonedas;
+      total_costo_modelo := total_costo_modelo + total_costo_tragamonedas;
+      actual_tragamonedas:= reg.cod_tragamonedas;
+    FIN_SUBACCION;
+
+    SUBACCION corte_modelo ES
+      corte_tragamonedas;
+      ESC("En la sucursal: ", actual_sucursal, "la tragamonedas perteneciente a la marca: ", actual_marca, "y modelo: ", actual_modelo, "tuvo un total de: ", total_rep_modelo, "reparaciones, siento el costo total: $", total_costo_modelo);   
+      total_rep_marca := total_rep_marca + total_rep_modelo;
+      total_costo_marca := total_costo_marca + total_costo_modelo;
+      actual_modelo:= reg.modelo;
+    FIN_SUBACCION;
+
+    SUBACCION corte_marca ES
+      corte_modelo;
+      ESC("En la sucursal: ", actual_sucursal, "la tragamonedas perteneciente a la marca: ", actual_marca, " tuvo un total de: ", total_rep_marca, "reparaciones, siento el costo total: $", total_costo_marca);   
+      total_rep_sucursal := total_rep_sucursal + total_rep_marca;
+      total_costo_sucursal := total_costo_sucursal + total_costo_marca;
+      actual_marca := reg.marca;
+    FIN_SUBACCION;
+
+    SUBACCION corte_sucursal ES
+      corte_marca;
+      ESC("En la sucursal: ", actual_sucursal," el costo total de reparacion de tragamonedas es de: $", total_costo_sucursal);
+      total_rep_general:= total_rep_general + total_rep_sucursal;
+      total_costo_general:= total_costo_general + total_costo_sucursal;
+      actual_sucursal:= reg.cod_sucursal;
+    FIN_SUBACCION;
+
+    SUBACCION tratar_registro ES
+      total_rep_tragamonedas:= total_rep_tragamonedas + 1;
+      total_costo_tragamonedas := total_costo_tragamonedas + reg.costo_reparacion;
+    FIN_SUBACCION;
+
+    
+    PROCESO
+
+      total_rep_tragamonedas, total_rep_modelo, total_rep_marca, total_rep_sucursal, total_rep_general:= 0;
+      total_costo_tragamonedas, total_costo_modelo; total_costo_marca, total_costo_sucursal, total_costo_general:= 0;
+      
+      ABRIR E/(reparaciones);
+      LEER(reparaciones, reg);
+
+      MIENTRAS NFDA(reparaciones) HACER
+        ver_corte;
+        tratar_registro;
+        LEER(reparaciones, reg);
+      FIN_MIENTRAS;
+      corte_sucursal;
+
+      CERRAR(reparaciones);
+
+    FIN_PROCESO;
+
+
+      
+      
+
+
+
+
+
