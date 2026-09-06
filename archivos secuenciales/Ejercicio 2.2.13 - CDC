@@ -95,6 +95,11 @@ ACCION ejercicio 2.2.13 ES
       actual_sucursal:= reg.cod_sucursal;
     FIN_SUBACCION;
 
+    SUBACCION emitir_totales_generales ES
+      corte_sucursal;
+      ESC("El total de reparaciones de tragamones en general fueron: ",total_rep_general, "con un costo total de: $ ", total_costo_general);
+    FIN_SUBACCION;
+
     SUBACCION tratar_registro ES
       total_rep_tragamonedas:= total_rep_tragamonedas + 1;
       total_costo_tragamonedas := total_costo_tragamonedas + reg.costo_reparacion;
@@ -114,7 +119,8 @@ ACCION ejercicio 2.2.13 ES
         tratar_registro;
         LEER(reparaciones, reg);
       FIN_MIENTRAS;
-      corte_sucursal;
+
+      emitir_totales_generales;
 
       CERRAR(reparaciones);
 
