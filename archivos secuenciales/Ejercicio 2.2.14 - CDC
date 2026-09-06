@@ -27,7 +27,8 @@ ACCION ejercicio 2.2.14 ES
     archivo_censo: archivo de censo ordenado por radio, manzana, nro_vivienda;
     reg: censo;
 
-    total_manzana, total_radio, total_ciudad: N(5);
+    total_manzana, total_radio: N(5);
+    total_ciudad: N(7);
     actual_manzana: N(3);
     actual_radio: N(5);
 
@@ -39,6 +40,7 @@ ACCION ejercicio 2.2.14 ES
           corte_manzana;
         FIN_SI;
       FIN_SI;
+    FIN_SUBACCION;
 
     SUBACCION corte_manzana ES
       ESC("En la ciudad de Resistencia, en el radio: ", actual_radio, "y manzana: ", actual_manzana, "la cantidad de personas que habitan en viviendas cuya condición es muy buena es de: ",total_manzana);
@@ -57,12 +59,12 @@ ACCION ejercicio 2.2.14 ES
 
     SUBACCION corte_ciudad ES
       corte_radio;
-      ESC("El total de personas que habitan en viviendas cuya condición es muy buena en la ciudad de Resistencia es de: ",total_ciudad");
+      ESC("El total de personas que habitan en viviendas cuya condición es muy buena en la ciudad de Resistencia es de: ",total_ciudad);
     FIN_SUBACCION;
 
     SUBACCION tratar_registro ES
       SI (reg.condicion_vivienda = "Muy buena") ENTONCES
-        total_manzana:= total_manzana + 1;
+        total_manzana:= total_manzana + reg.cantidad_habitantes;
       FIN_SI;
     FIN_SUBACCION;
 
