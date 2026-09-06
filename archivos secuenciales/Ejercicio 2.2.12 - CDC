@@ -1,0 +1,111 @@
+Dada una secuencia con información de población de un PAIS:
+
+POBLACION Ordenado por Provincia, Departamento, Ciudad, Barrio, ID_Casa
+
+Provincia
+Departamento
+Ciudad
+Barrio
+ID_Casa
+Cantidad_Habitantes
+
+Generar una secuencia con información de los departamentos de esa provincia, cuyo registro tenga el siguiente formato:
+
+POBLACION_SALIDA
+
+Provincia
+Departamento
+Cantidad_Habitantes
+
+ACCION ejercicio ES
+
+AMBIENTE
+  poblacion = registro
+    provincia: AN(20);
+    departamento: AN(20);
+    ciudad: AN(20);
+    barrio: AN(25);
+    id_casa: N(7);
+    cantidad_habitantes: N(2);
+  fin_registro;
+
+  poblacion_salida = registr
+    provincia: AN(20);
+    departamento: AN(20);
+    cantidad_habitantes: N(2);
+  fin_registro;
+
+  archivo_entrada: archivo de poblacion ordenado por provincia, departamento, ciudad, barrio, id_casa;
+  archivo_salida: archivo de poblacion_salida;
+  reg_entrada: poblacion;
+  reg_salida: poblacion_salida;
+
+  total_departamento: N(7)
+  actual_provincia, actual_departamento: AN(20);
+
+  SUBACCION ver_corte ES
+    SI (actual_provincia <> reg_entrada.provincia) ENTONCES
+      corte_provincia
+    SINO
+      SI (actual_departamento <> reg_entrada.departamento) ENTONCES
+        corte_departamento
+      FIN_SI;
+    FIN_SI;
+  FIN_SUBACCION;
+
+  SUBACCION corte_departamento ES
+    reg_salida.provincia:= actual_provincia;
+    reg_salida.departamento:= actual_departamento;
+    reg_salida.cantidad_habitantes:= total_departamento;
+    GRABAR(archivo_salida, reg_salida);
+    actual_departamento:= reg_entrada.departamento;
+    total_departamento:= 0;
+  FIN_SUBACCION;
+
+  SUBACCION corte_provincia ES
+    corte_departamento;
+    actual_provincia:= reg_entrada.provincia;
+  FIN_SUBACCION;
+
+  SUBACCION tratar_registro ES
+    total_departamento := total_departamento + reg_entrada.cant_habitantes;
+  FIN_SUBACCION;
+
+
+  PROCESO
+    ABRIR E/(archivo_entrada);
+    ABRIR S/(archivo_salida);
+
+    total_departamento:= 0;
+
+    LEER(archivo_entrada, reg_entrada);
+
+    actual_provincia:= reg_entrada.provincia;
+    actual_departamento:= reg_entrada.departamento;
+
+    MIENTRAS NFDA(archivo_entrada) HACER
+      ver_corte;
+      tratar_registro;
+      LEER(archivo_entrada, reg_entrada);
+    FIN_MIENTRAS;
+    corte_provincia;
+
+    CERRAR(archivo_entrada);
+    CERRAR(archivo_salida);
+
+  FIN_ACCION;
+      
+    
+
+  
+
+
+
+
+
+
+
+
+
+
+    
