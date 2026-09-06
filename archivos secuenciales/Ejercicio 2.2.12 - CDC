@@ -29,10 +29,10 @@ AMBIENTE
     cantidad_habitantes: N(2);
   fin_registro;
 
-  poblacion_salida = registr
+  poblacion_salida = registro
     provincia: AN(20);
     departamento: AN(20);
-    cantidad_habitantes: N(2);
+    cantidad_habitantes: N(7);
   fin_registro;
 
   archivo_entrada: archivo de poblacion ordenado por provincia, departamento, ciudad, barrio, id_casa;
@@ -68,7 +68,7 @@ AMBIENTE
   FIN_SUBACCION;
 
   SUBACCION tratar_registro ES
-    total_departamento := total_departamento + reg_entrada.cant_habitantes;
+    total_departamento := total_departamento + reg_entrada.cantidad_habitantes;
   FIN_SUBACCION;
 
 
