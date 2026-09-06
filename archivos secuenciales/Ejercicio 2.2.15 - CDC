@@ -46,6 +46,7 @@ ACCION ejercicio 2.2.15 ES
     total_division, total_anio: (3);
     total_alumnos: N(4);
     regular_divisio, regular_anio, libre_division, libre_anio: N(3);
+    total_libres: N(4);
 
     actual_escuela: AN(40);
     actual_anio: ("1","2","3","4","5");
@@ -75,9 +76,7 @@ ACCION ejercicio 2.2.15 ES
       inasistencias_anio:= inasistencias_anio + inasistencias_division;
       regular_anio:= regular_anio + regular_division;
       libre_anio:= libre_anio + libre_division;
-      inasistencias_anio:= inasistencias_division;
       actual_division:= reg.division;
-      inasistencias_division:= 0;
       total_division:= 0;
       regular_division:= 0;
       libre_division:= 0;
@@ -93,17 +92,18 @@ ACCION ejercicio 2.2.15 ES
       total_libres := total_libres + libre_anio;
       total_inasistencias := total_inasistencias + inasistencias_anio;
       actual_anio := reg.anio;
-      total_anio, regular_anio, libre_anio:= 0;
+      total_anio, regular_anio, libre_anio, inasistencias_anio:= 0;
     FIN_SUBACCION;
 
     SUBACCION corte_escuela ES
       corte_anio;
+      actual_escuela := reg.escuela;
     FIN_SUBACCION;
 
     SUBACCION corte_final ES
-      corte_anio;
+      corte_escuela;
       ESC("La cantidad total de alumnos de todas las escuelas del distrito número: ", distrito_num, "es de: ", total_alumnos);
-      ESC("El porcentaje de alumnos libres de todas las escuelas del distrito número: ", distrito_num, "es de: ", total_libres*100)/total_alumnos);
+      ESC("El porcentaje de alumnos libres de todas las escuelas del distrito número: ", distrito_num, "es de: ", (total_libres*100)/total_alumnos);
       ESC("El promedio de inasistencias por alumno de todas las escuelas del distrito número: ", distrito_num, "es de: ", total_inasistencias/total_alumnos);
     FIN_SUBACCION;
 
@@ -131,8 +131,8 @@ ACCION ejercicio 2.2.15 ES
       total_division, total_anio, total_alumnos, regular_divisio, regular_anio, libre_division, libre_anio, inasistencias_anio, inasistencias_division, total_inasistencias:= 0;
 
       actual_escuela:= reg.escuela;
-      actual_anio: reg.anio;
-      actual_division: reg.division;
+      actual_anio:= reg.anio;
+      actual_division:= reg.division;
 
       MIENTRAS NFDA(alumnos) HACER
         ver_corte;
