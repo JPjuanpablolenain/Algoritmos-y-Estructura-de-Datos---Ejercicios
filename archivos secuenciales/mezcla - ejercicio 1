@@ -1,0 +1,59 @@
+ACCION ejercicio mezcla 1 ES
+
+  AMBIENTE
+
+    fecha = REGISTRO
+      dd: 1..31;
+      mm: 1..12;
+      aa: N(4);
+    FIN_REGISTRO;
+
+    pelicula = REGISTRO
+      nro_pelicula: N(5);
+      titulo: AN(20);
+      genero: ("Drama", "Terror","Ciencia ficción");
+      cant_copias: N(2);
+      fecha_estreno: fecha;
+    FIN_REGISTRO;
+
+    peliculas_existentes, peliculas_nuevas, archivo_salida: archivo de pelicula ordenado por ordenado por nro_pelicula;
+    reg_existentes, reg_nuevas, reg_salida: pelicula;
+
+    PROCESO
+
+      ABRIR E/(peliculas_existentes);
+      ABRIR E/(peliculas_nuevas);
+      ABRIR S/(archivo_salida);
+      LEER(peliculas_existentes, reg_existentes);
+      LEER(peliculas_nuevas, reg_nuevas);
+
+      MIENTRAS NFDA(peliculas_existentes) O NFDA(peliculas_nuevas) HACER
+        SI (reg_existentes.nro_pelicula < reg_nuevas.nro_pelicula) ENTONCES
+          reg_salida:= reg_existentes;
+          GRABAR(archivo_salida, reg_salida);
+          LEER(peliculas_existentes, reg_existentes);
+        SINO
+          reg_salida:= reg_nuevas;
+          GRABAR(archivo_salida, reg_salida);
+          LEER(peliculas_nuevas, reg_nuevas);
+        FIN_SI;
+      FIN_MIENTRAS;
+      CERRAR(peliculas_existentes);
+      CERRAR(peliculas_nuevas);
+      CERRAR(archivo_salida);
+
+FIN_ACCION;
+
+
+
+
+
+
+
+
+
+
+
+
+
+      
